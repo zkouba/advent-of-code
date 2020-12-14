@@ -61,7 +61,7 @@ def validate(input_list: List[Tuple[Rule, str]], test: Callable[[Rule, str], boo
     return valid_entries
 
 
-def main():
+def main() -> None:
     input_list = load("./input.txt")
     valid_entries = validate_occurrences(input_list)
     print("Valid entries according to occurrences: %d" % valid_entries)
