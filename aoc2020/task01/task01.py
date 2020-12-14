@@ -47,7 +47,7 @@ def find_triplet(
 
 
 def main() -> None:
-    input_list = load("../input.txt")
+    input_list = load("./input.txt")
 
     t = find_pair(input_list)
     print("Found: %s" % str(t))
