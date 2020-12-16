@@ -59,7 +59,7 @@ def main() -> None:
     print("The product is %d" % product)
 
 
-def log_encountered_obstacles(direction, obstacles):
+def log_encountered_obstacles(direction: Tuple[int, int], obstacles: int) -> None:
     print("Trees encountered [%d, %d]: %d" % (direction[0], direction[1], obstacles))
 
 

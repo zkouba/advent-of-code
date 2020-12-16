@@ -1,6 +1,5 @@
 import re
-from typing import List
-
+from typing import List, Callable, Pattern
 
 DEBUG = True
 
@@ -12,7 +11,7 @@ def log(msg: str) -> None:
 
 class Field:
 
-    def __init__(self, name: str, validation):
+    def __init__(self, name: str, validation: Callable[[str], bool]):
         self.name = name
         self.validation_fn = validation
 
@@ -108,7 +107,7 @@ class PassportEntry:
         return True
 
     @staticmethod
-    def parse(raw: str):
+    def parse(raw: str) -> 'PassportEntry' or None:
         entry_segments: List[str] = raw.split()
         fields = {}
         for entry_segment in entry_segments:
@@ -152,7 +151,7 @@ class Validator:
         return Validator.validate_pattern(hair_color, Validator.PATTERN_HAIR_COLOR)
 
     @staticmethod
-    def validate_year(year: str, min_year: int, max_year:int) -> bool:
+    def validate_year(year: str, min_year: int, max_year: int) -> bool:
         return (Validator.PATTERN_YEAR.match(year) is not None) and (min_year <= int(year) <= max_year)
 
     @staticmethod
@@ -172,7 +171,7 @@ class Validator:
         return Validator.validate_pattern(id_str, Validator.PATTERN_ID)
 
     @staticmethod
-    def validate_pattern(subject: str, pattern) -> bool:
+    def validate_pattern(subject: str, pattern: Pattern) -> bool:
         return pattern.match(subject) is not None
 
 
