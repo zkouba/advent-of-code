@@ -5,8 +5,8 @@ def load(input_path: str) -> List[int]:
     ret_val = []
     with open(input_path, 'r') as input_file:
         for line in input_file:
-            bin = binarize_str(line)
-            val = int(bin, 2)
+            bin_str = binarize_str(line)
+            val = int(bin_str, 2)
             ret_val.append(val)
     return ret_val
 
@@ -15,11 +15,12 @@ def binarize_str(raw: str) -> str:
     return raw.strip().upper().replace("F", "0").replace("B", "1").replace("L", "0").replace("R", "1")
 
 
-def find_seat(passes: List[int]):
+def find_seat(passes: List[int]) -> int or None:
     passes.sort()
     prev = 7
     for i in range(len(passes)):
         curr = passes[i]
+        # check the row number - we know we can skip the first and the last row
         r = curr // 8
         if r == 0:
             continue
@@ -34,7 +35,6 @@ def find_seat(passes: List[int]):
 def main() -> None:
     passes = load("./input.txt")
     passes.sort()
-    print(str(passes))
     highest = passes[-1]
     print("Highest seat id: %d" % highest)
     found = find_seat(passes)
