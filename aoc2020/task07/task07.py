@@ -7,12 +7,10 @@ LEAF = "no other bags"
 
 GRP_NAME_SUBJECT = "subject"
 GRP_SUBJECT = "(?P<" + GRP_NAME_SUBJECT + ">[a-z][a-z\\s]*)"
-
 GRP_NAME_CHILDREN = "children"
 GRP_CHILD = "\\d+\\s*[a-z][a-z\\s]*\\s+bags?"
-
 PATTERN_BAG_RULE = re.compile(
-    "^" + GRP_SUBJECT +  "bags contain (?P<" + GRP_NAME_CHILDREN + ">" + GRP_CHILD + "(\\s*,\\s*" + GRP_CHILD + ")*)\\.$"
+    "^" + GRP_SUBJECT + "bags contain (?P<" + GRP_NAME_CHILDREN + ">" + GRP_CHILD + "(\\s*,\\s*" + GRP_CHILD + ")*)\\.$"
 )
 
 GRP_NAME_CHILD_OCCURRENCES = "occurrences"
@@ -24,19 +22,10 @@ PATTERN_CHILD = re.compile(
 
 class Bag:
 
-    # ID_BASE = 0
-
     def __init__(self, color: str):
-        # self.id = Bag.ID_BASE
-        # Bag.ID_BASE += 1
         self.color: str = color
         self.children: Dict[str, Child] = {}
         self.parents: Dict[str, Bag] = {}
-
-    # def __eq__(self, other):
-    #     if type(other) is not Bag:
-    #         return False
-    #     return self.id == other.id
 
 
 class Child:
@@ -63,7 +52,7 @@ class Graph:
             node = Bag(color=node_color)
             self.graph_map[node_color] = node
 
-        # Setup the children nodes of the new node
+        # Setup the child nodes of the new node
         for child_tuple in children:
             child_occurrences = child_tuple[0]
             child_color = child_tuple[1]
@@ -92,6 +81,7 @@ class Graph:
     def count_all_parents_for(self, node_color: str, visited_nodes: List[str] = None) -> Set[str]:
         ret_val = set()
         if node_color in self.root_colors:
+            # root has no parents - we're done
             return ret_val
 
         if visited_nodes is None:
@@ -103,6 +93,7 @@ class Graph:
         node = self.graph_map[node_color]
         for parent_color in node.parents.keys():
             ret_val.add(parent_color)
+            # time to dive into recursion
             grandparents = self.count_all_parents_for(parent_color, visited_nodes[:])
             ret_val.update(grandparents)
         return ret_val
@@ -114,6 +105,7 @@ class Graph:
         total = 1
         node = self.graph_map[node_color]
         if len(node.children) == 0:
+            # leaves have no children - we're done
             return total
         if visited_nodes is None:
             visited_nodes = []
@@ -122,6 +114,7 @@ class Graph:
 
         for child_color in node.children.keys():
             child = node.children[child_color]
+            # time to dive into recursion
             childs_total = self.count_needed_bags_for(child_color, visited_nodes[:])
             total += (child.occurrences * childs_total)
 
@@ -135,7 +128,10 @@ def load(input_path: str) -> Graph or None:
             line = raw_line.strip().lower()
             m_rule = PATTERN_BAG_RULE.match(line)
             if m_rule:
+                # valid rule detected
+                # extract the bag-color
                 bag_color = m_rule.group(GRP_NAME_SUBJECT).strip()
+                # extract the specification of child-bags as single string and then parse it separately
                 children_str = m_rule.group(GRP_NAME_CHILDREN).strip()
                 children: List[Tuple[int, str]] = []
                 if not children_str == LEAF:
