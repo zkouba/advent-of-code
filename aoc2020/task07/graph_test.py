@@ -34,9 +34,13 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(1, len(graph.graph_map['grandchild b'].parents))
         self.assertEqual(graph.graph_map['grandchild b'].parents['child'], graph.graph_map['child'])
 
-    def test_simple_graph(self):
+    def test_count_parents(self):
         simple_graph = load("./simple_graph.txt")
         self.assertEqual(4, len(simple_graph.count_all_parents_for('shiny gold')))
+
+    def test_count_needed_bags(self):
+        simple_graph = load("./simple_graph.txt")
+        self.assertEqual(32, simple_graph.count_needed_other_bags_for('shiny gold'))
 
 
 if __name__ == '__main__':

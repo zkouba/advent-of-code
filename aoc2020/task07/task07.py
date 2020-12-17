@@ -107,6 +107,9 @@ class Graph:
             ret_val.update(grandparents)
         return ret_val
 
+    def count_needed_other_bags_for(self, node_color: str) -> int:
+        return self.count_needed_bags_for(node_color) - 1
+
     def count_needed_bags_for(self, node_color: str, visited_nodes: List[str] = None) -> int:
         total = 1
         node = self.graph_map[node_color]
@@ -151,8 +154,8 @@ def main() -> None:
     n = graph.count_all_parents_for(my_bag)
     print("%s bag can be contained by %d bags" % (my_bag, len(n)))
 
-    n = graph.count_needed_bags_for(my_bag)
-    print("You need %d bags if you start with a single %s bag" % (n, my_bag))
+    n = graph.count_needed_other_bags_for(my_bag)
+    print("You need %d other bags if you start with a single %s bag" % (n, my_bag))
 
 
 if __name__ == "__main__":
